@@ -1,0 +1,3 @@
+export const PROMOTION_PRODUCTS_LIMIT = 4;
+
+
