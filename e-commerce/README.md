@@ -1,72 +1,123 @@
-This document provide steps to run the e-commerce application.
+# Next.js E-Commerce
 
-## Summary
+A modern e-commerce web application built with Next.js 15, React 19, and TypeScript. It features product browsing, filtering, shopping cart management, and user authentication — powered by a mock API backend (DummyJSON).
 
-About feature scopes, please check it in the document: https://docs.google.com/document/d/19af9CGtOq993q-7GdC-tZQLkNWyMg5wUSfbfEQ8n9yg/edit?tab=t.0
+## Tech Stack
 
-## Set up project
-1. Clone the repository:
+| Layer | Technology |
+|---|---|
+| Framework | Next.js 15 (App Router, Turbopack) |
+| Language | TypeScript 5 |
+| Styling | Tailwind CSS v4, shadcn/ui, Radix UI |
+| Forms | React Hook Form + Zod |
+| Auth | NextAuth v5 (Credentials + JWT) |
+| Icons | Lucide React |
+| Carousel | Embla Carousel |
+| Toasts | Sonner |
+| Linting | ESLint, Prettier, Commitlint, Husky |
 
-```bash
-git clone ...
+## Features
+
+- Product listing with filtering (price range, category, brand) and sorting
+- Product detail page with image carousel and reviews
+- Shopping cart — add, remove, update quantity; persisted in session storage
+- User authentication (email/password) with protected routes
+- Order summary with discount and shipping fee calculations
+- Breadcrumb navigation, loading skeletons, responsive design
+- Dynamic SEO metadata (OpenGraph, Twitter cards)
+
+## Project Structure
+
+```
+src/
+├── app/                    # Next.js App Router
+│   ├── api/                # Route handlers (products, categories, auth)
+│   ├── (auth)/             # Login & profile pages
+│   ├── (shopping)/         # Shop listing & cart pages
+│   └── page.tsx            # Home page
+├── components/
+│   ├── features/           # Feature-scoped components (home, auth, shopping)
+│   ├── layout/             # Header, footer, breadcrumb
+│   ├── common/             # Shared UI, form fields, skeletons
+│   └── widgets/            # Cards, pagination
+├── actions/                # Next.js Server Actions
+├── hooks/                  # Custom React hooks (cart, session storage, etc.)
+├── lib/                    # Auth config, schemas, utilities
+├── utils/                  # API client, URL builder, formatters
+├── constants/              # Routes, filter options, messages
+└── types/                  # TypeScript interfaces
 ```
 
-2. Check out the `e-commerce` branch:
+## Setup
+
+### 1. Clone the repository
 
 ```bash
-git checkout e-commerce
-```
-3. Install dependencies:
-
-```bash
+git clone <repository-url>
 cd e-commerce
+```
+
+### 2. Install dependencies
+
+```bash
 npm install
 ```
 
-4. Set up environment variables:
-Create a `.env.local` file in the root of the project and add the following variables (or you can use your own values)
+### 3. Configure environment variables
 
-This guide uses for the local development environment. If you want to run the project in production, you can skip this step and use the `.env.production` file.
-
-In real projects, you should not commit the `.env.local` file to the repository, but for this project, I will commit it to the repository for convenience.
+Create a `.env.local` file in the project root:
 
 ```bash
-# .env.local
-NEXT_PUBLIC_API_URL=
-AUTH_SECRET=
-USER_EMAIL=
-PASSWORD=
-AUTH_TRUST_HOST=
+# API
+NEXT_PUBLIC_API_URL=https://dummyjson.com
+
+# NextAuth — generate secret with: openssl rand -base64 32
+AUTH_SECRET=your-secret-here
+AUTH_TRUST_HOST=true
+
+# Mock user credentials
+USER_EMAIL=your-email@example.com
+PASSWORD=your-password
 ```
 
-## Run project on local
+## Running the App
 
-Run the development server:
+**Development:**
 
 ```bash
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-## Run project on production
-Build the application for production:
+**Production:**
 
 ```bash
 npm run build
-```
-Then start the production server:
-
-```bash
 npm start
 ```
 
-## Deployment
-Link product: https://react-training-beta-dun.vercel.app/
-
-Note: In production, I use the mock account with email for login, you can use the following credentials to log in:
+**Other scripts:**
 
 ```bash
-USER_EMAIL=admin@gmail.com
-PASSWORD=admin@1234567
+npm run lint    # Run ESLint
 ```
+
+## Deployment
+
+Live URL: https://react-training-beta-dun.vercel.app/
+
+To log in on the deployed app, use the mock credentials:
+
+```
+Email:    admin@gmail.com
+Password: admin@1234567
+```
+
+## Notes
+
+- This project uses [DummyJSON](https://dummyjson.com) as a mock API — no real database is required.
+- Cart state is persisted in session storage (client-side only).
+- Authentication uses a mock in-memory user with bcrypt-hashed password.
+- Protected routes (`/cart`, `/profile`) redirect to `/login` if the user is unauthenticated.
+- For full feature scope details, see the [project document](https://docs.google.com/document/d/1uNUnMoEJOx9iE-_uv1J9YdHK4H_inhXaYpGbxDP_D10/edit?usp=sharing).
