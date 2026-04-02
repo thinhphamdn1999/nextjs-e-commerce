@@ -32,11 +32,11 @@ In real projects, you should not commit the `.env.local` file to the repository,
 
 ```bash
 # .env.local
-NEXT_PUBLIC_API_URL=http://localhost:3000
-AUTH_SECRET="SYCgbuaTa+nmyKk1mMlsE4sskJRqMwLoqpysoIdft8o=" # Added by `npx auth`. Read more: https://cli.authjs.dev
-USER_EMAIL=admin@gmail.com
-PASSWORD=admin@1234567
-AUTH_TRUST_HOST=true # Added by `npx auth`. Read more: https://cli.authjs.dev
+NEXT_PUBLIC_API_URL=
+AUTH_SECRET=
+USER_EMAIL=
+PASSWORD=
+AUTH_TRUST_HOST=
 ```
 
 ## Run project on local
