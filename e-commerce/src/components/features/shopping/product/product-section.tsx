@@ -1,8 +1,6 @@
-import { PAGE_LIMIT } from '@/constants/page';
-
 import { getProductList } from '@/actions/product';
 import ProductHeader from './product-header';
-import ProductList from './product-list';
+import InfiniteProductList from './infinite-product-list';
 
 interface ProductSectionProps {
   urlParams: {
@@ -16,11 +14,10 @@ interface ProductSectionProps {
 }
 
 const ProductSection = async ({ urlParams }: ProductSectionProps) => {
-  const { page, min, max, category, orderBy, sortBy } = urlParams;
-  const offset = page ? (Number(page) - 1) * PAGE_LIMIT : 0;
+  const { min, max, category, orderBy, sortBy } = urlParams;
 
   const { products, pagination } = await getProductList({
-    offset,
+    offset: 0,
     minPrice: min,
     maxPrice: max,
     category,
@@ -36,7 +33,11 @@ const ProductSection = async ({ urlParams }: ProductSectionProps) => {
         offset={pagination?.offset}
         limit={pagination?.limit}
       />
-      <ProductList pagination={pagination} products={products} />
+      <InfiniteProductList
+        initialProducts={products}
+        initialPagination={pagination}
+        filters={{ min, max, category, sortBy, orderBy }}
+      />
     </>
   );
 };
