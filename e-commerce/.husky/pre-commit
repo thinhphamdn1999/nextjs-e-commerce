@@ -1,1 +1,1 @@
-cd e-commerce && npx next lint
+cd e-commerce && npm run lint
