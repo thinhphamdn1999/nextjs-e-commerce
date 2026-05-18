@@ -105,13 +105,13 @@ npm run lint    # Run ESLint
 
 ## Deployment
 
-Live URL: https://react-training-beta-dun.vercel.app/
+Live URL: https://e-commerce-alpha-rouge-97.vercel.app/
 
 To log in on the deployed app, use the mock credentials:
 
 ```
-Email:    admin@gmail.com
-Password: admin@1234567
+Email:    emily.johnson@x.dummyjson.com
+Password: emilyspass
 ```
 
 ## Notes
