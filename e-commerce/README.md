@@ -69,7 +69,7 @@ Create a `.env.local` file in the project root:
 
 ```bash
 # API
-NEXT_PUBLIC_API_URL=https://dummyjson.com
+PORT=3000
 
 # NextAuth — generate secret with: openssl rand -base64 32
 AUTH_SECRET=your-secret-here
