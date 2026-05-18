@@ -1,10 +1,13 @@
 'use client';
 
-import { Separator } from '@/components/common/ui/separator';
-import ProductCard from '@/components/widgets/card/product-card';
-import useInfiniteScroll from '@/hooks/use-infinite-scroll';
 import { Pagination } from '@/types/pagination';
 import { Product } from '@/types/products';
+
+import { Button } from '@/components/common/ui/button';
+import { Separator } from '@/components/common/ui/separator';
+import ProductCard from '@/components/widgets/card/product-card';
+
+import useInfiniteScroll from '@/hooks/use-infinite-scroll';
 
 interface InfiniteProductListProps {
   initialProducts: Product[];
@@ -23,7 +26,7 @@ const InfiniteProductList = ({
   initialPagination,
   filters,
 }: InfiniteProductListProps) => {
-  const { items: products, isLoading, hasMore, sentinelRef } = useInfiniteScroll<Product>({
+  const { items: products, isLoading, hasMore, sentinelRef, loadMore, shouldAutoLoad } = useInfiniteScroll<Product>({
     initialItems: initialProducts,
     total: initialPagination.total,
     fetchMore: async (offset) => {
@@ -38,6 +41,7 @@ const InfiniteProductList = ({
       const data = await res.json();
       return data.data.products;
     },
+    maxAutoPages: 2,
   });
 
   if (!products.length) {
@@ -56,14 +60,22 @@ const InfiniteProductList = ({
       <div className="col-span-full mt-1 w-full">
         <Separator className="bg-border-foreground" />
       </div>
-      <div
-        ref={sentinelRef}
-        className="col-span-full flex items-center justify-center py-6"
-      >
-        {isLoading && (
-          <p className="text-muted-foreground text-sm">Loading more...</p>
-        )}
-        {!isLoading && !hasMore && (
+      <div className="col-span-full flex items-center justify-center py-6">
+        {shouldAutoLoad ? (
+          <div ref={sentinelRef}>
+            {isLoading && (
+              <p className="text-muted-foreground text-sm">Loading more...</p>
+            )}
+          </div>
+        ) : hasMore ? (
+          <Button
+            onClick={loadMore}
+            disabled={isLoading}
+            variant="outline"
+          >
+            {isLoading ? 'Loading...' : 'Load more'}
+          </Button>
+        ) : (
           <p className="text-muted-foreground text-sm">All products loaded</p>
         )}
       </div>

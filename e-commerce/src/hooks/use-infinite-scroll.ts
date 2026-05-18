@@ -5,6 +5,7 @@ interface UseInfiniteScrollOptions<T> {
   total: number;
   fetchMore: (offset: number) => Promise<T[]>;
   rootMargin?: string;
+  maxAutoPages?: number;
 }
 
 const useInfiniteScroll = <T>({
@@ -12,14 +13,20 @@ const useInfiniteScroll = <T>({
   total,
   fetchMore,
   rootMargin = '200px',
+  maxAutoPages
 }: UseInfiniteScrollOptions<T>) => {
   const [items, setItems] = useState<T[]>(initialItems);
   const [isLoading, setIsLoading] = useState(false);
+  const [autoLoadCount, setAutoLoadCount] = useState(0);
   const sentinelRef = useRef<HTMLDivElement>(null);
   const isLoadingRef = useRef(false);
 
+  const hasMore = items.length < total;
+  const shouldAutoLoad =
+    maxAutoPages === undefined || autoLoadCount < maxAutoPages;
+
   const loadMore = async () => {
-    if (isLoadingRef.current || items.length >= total) return;
+    if (isLoadingRef.current || !hasMore) return;
 
     isLoadingRef.current = true;
     setIsLoading(true);
@@ -27,6 +34,7 @@ const useInfiniteScroll = <T>({
     try {
       const newItems = await fetchMore(items.length);
       setItems((prev) => [...prev, ...newItems]);
+      setAutoLoadCount((prev) => prev + 1);
     } finally {
       isLoadingRef.current = false;
       setIsLoading(false);
@@ -37,6 +45,7 @@ const useInfiniteScroll = <T>({
   loadMoreRef.current = loadMore;
 
   useEffect(() => {
+    if (!shouldAutoLoad) return;
     const sentinel = sentinelRef.current;
     if (!sentinel) return;
 
@@ -49,9 +58,9 @@ const useInfiniteScroll = <T>({
 
     observer.observe(sentinel);
     return () => observer.disconnect();
-  }, [rootMargin]);
+  }, [shouldAutoLoad, rootMargin]);
 
-  return { items, isLoading, sentinelRef, hasMore: items.length < total };
+  return { items, isLoading, hasMore, sentinelRef, loadMore, shouldAutoLoad };
 };
 
 export default useInfiniteScroll;
